@@ -45,7 +45,7 @@ local function set_buffer_contents(buf, contents)
     if #contents < 9 then
         for i = 1, 10 - #contents - 1 do contents[#contents + 1] = "" end
     end
-    contents[#contents + 1] = "(Press 'q' to close this window, 'r' to refresh prices)"
+    contents[#contents + 1] = "<leader>zt to close ; <leader>zr to refresh"
     vim.api.nvim_buf_set_lines(buf, 0, #contents, false, contents)
 
     vim.api.nvim_buf_set_option(buf, "filetype", "gecko")
@@ -53,37 +53,24 @@ local function set_buffer_contents(buf, contents)
     vim.api.nvim_buf_set_option(buf, "bufhidden", "delete")
 end
 
-local function get_crypto_prices(base_currency, coin_names)
-    -- Returns the price of the defined cryptos in the base currency
-
-    coin_names = table.concat(coin_names, "%2C")
+local function get_random_full_name()
     local resp = reqs.get_random_user()
 
     if not resp.success then
-       error("Could not make request for " .. coin_names)
+       error("Could not make request")
     end
 
-    -- Simplify the response to a table where the key is the coin name and the value is the price
-    local prices_table = {}
-    for k, v in pairs(resp.json_table) do
-        prices_table[k] = v[base_currency]
-    end
+    local random_full_name = resp.json_table['first_name'] .. " " .. resp.json_table['last_name']
 
-    -- returns a table, e.g. {bitcoin=69, ethereum=420}
-    return prices_table
+    return random_full_name
 end
 
 local function create_price_data()
-    -- Gather prices of the defined coins and create the messages which we will show on the created popup window
-
     local contents = {}
-    local req_status, prices = pcall(get_crypto_prices, vim.g.cryptoprice_base_currency, vim.g.cryptoprice_crypto_list)
+    local req_status, random_full_name = pcall(get_random_full_name)
 
     if req_status then
-        -- Create the message line by line in the defined crypto order
-        for k, v in ipairs(vim.g.cryptoprice_crypto_list) do
-            contents[#contents+1] = "- 1 " .. string.upper(v) .. " is " .. tostring(prices[v]) .. " " .. string.upper(vim.g.cryptoprice_base_currency)
-        end
+        contents[1] = random_full_name
     else
         contents[1] = "[ERROR] No prices found"
     end
@@ -113,11 +100,20 @@ function M.toggle_window()
 
     set_buffer_contents(Gecko_buf, { "gm!", "We are gonna make it", "hahaha" })
 
+    M.refresh_prices()
+
     vim.api.nvim_buf_set_keymap(
         Gecko_buf,
         "n",
         "<leader>zt",
         ":lua require('gecko.ui').toggle_window()<CR>",
+        { silent = true }
+    )
+    vim.api.nvim_buf_set_keymap(
+        Gecko_buf,
+        "n",
+        "<leader>zr",
+        ":lua require('gecko.ui').refresh_prices()<CR>",
         { silent = true }
     )
 end
