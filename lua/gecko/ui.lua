@@ -1,6 +1,26 @@
 local popup = require('plenary.popup')
-local reqs = require("gecko.random_api")
+local curl = require("plenary.curl")
 local vim = vim
+
+local function get_request(req_url, decode_body_as_json)
+    local response = curl.request{
+        url=req_url,
+        method="get",
+        accept="application/json"
+    }
+
+    local response_decoded = nil
+
+    if response.status ~= 200 then
+        return {success=false, json_table=response_decoded}
+    end
+
+    if decode_body_as_json then
+        response_decoded = vim.fn.json_decode(response.body)
+    end
+
+    return {success=true, json_table=response_decoded}
+end
 
 local M = {}
 Gecko_buf = nil
@@ -54,10 +74,11 @@ local function set_buffer_contents(buf, contents)
 end
 
 local function get_random_full_name()
-    local resp = reqs.get_random_user()
+    local req_url = "https://random-data-api.com/api/v2/users"
+    local resp = get_request(req_url, true)
 
     if not resp.success then
-       error("Could not make request")
+        error("Could not make request")
     end
 
     local random_full_name = resp.json_table['first_name'] .. " " .. resp.json_table['last_name']
@@ -65,24 +86,17 @@ local function get_random_full_name()
     return random_full_name
 end
 
-local function create_price_data()
-    local contents = {}
-    local req_status, random_full_name = pcall(get_random_full_name)
-
-    if req_status then
-        contents[1] = random_full_name
-    else
-        contents[1] = "[ERROR] No prices found"
-    end
-    return contents
-end
-
 function M.refresh_prices()
     -- Gather prices and then create the messages which will be displayed
 
     if Gecko_win_id ~= nil and vim.api.nvim_win_is_valid(Gecko_win_id) then
-        local contents = create_price_data()
-        set_buffer_contents(Gecko_buf, contents)
+        local req_status, random_full_name = pcall(get_random_full_name)
+
+        if req_status then
+            set_buffer_contents(Gecko_buf, { random_full_name })
+        else
+            set_buffer_contents(Gecko_buf, { "[ERROR] No prices found" })
+        end
     else
         print("Window does not exists, no price data will be shown")
     end
