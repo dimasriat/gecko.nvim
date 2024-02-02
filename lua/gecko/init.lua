@@ -23,6 +23,8 @@ function M.setup(opts)
 
     set_default("window_width", 60)
     set_default("window_height", 10)
+
+    vim.api.nvim_set_keymap('n', '<leader>zt', '<cmd>lua require("gecko").toggle()<CR>', { noremap = true, silent = true })
 end
 
 -- Default config setup

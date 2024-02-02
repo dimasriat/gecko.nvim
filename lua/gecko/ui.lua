@@ -1,4 +1,5 @@
 local popup = require('plenary.popup')
+local reqs = require("gecko.random_api")
 local vim = vim
 
 local M = {}
@@ -12,7 +13,7 @@ local function create_window(width, height)
     local bufnr = vim.api.nvim_create_buf(false, false)
 
     local win_id, win = popup.create(bufnr, {
-        title = "Gecko Prices",
+        title = "FOO BAR",
         highlight = "GeckoPriceWindow",
         line = math.floor(((vim.o.lines - height) / 2) - 1),
         col = math.floor((vim.o.columns - width) / 2),
@@ -52,6 +53,54 @@ local function set_buffer_contents(buf, contents)
     vim.api.nvim_buf_set_option(buf, "bufhidden", "delete")
 end
 
+local function get_crypto_prices(base_currency, coin_names)
+    -- Returns the price of the defined cryptos in the base currency
+
+    coin_names = table.concat(coin_names, "%2C")
+    local resp = reqs.get_random_user()
+
+    if not resp.success then
+       error("Could not make request for " .. coin_names)
+    end
+
+    -- Simplify the response to a table where the key is the coin name and the value is the price
+    local prices_table = {}
+    for k, v in pairs(resp.json_table) do
+        prices_table[k] = v[base_currency]
+    end
+
+    -- returns a table, e.g. {bitcoin=69, ethereum=420}
+    return prices_table
+end
+
+local function create_price_data()
+    -- Gather prices of the defined coins and create the messages which we will show on the created popup window
+
+    local contents = {}
+    local req_status, prices = pcall(get_crypto_prices, vim.g.cryptoprice_base_currency, vim.g.cryptoprice_crypto_list)
+
+    if req_status then
+        -- Create the message line by line in the defined crypto order
+        for k, v in ipairs(vim.g.cryptoprice_crypto_list) do
+            contents[#contents+1] = "- 1 " .. string.upper(v) .. " is " .. tostring(prices[v]) .. " " .. string.upper(vim.g.cryptoprice_base_currency)
+        end
+    else
+        contents[1] = "[ERROR] No prices found"
+    end
+    return contents
+end
+
+function M.refresh_prices()
+    -- Gather prices and then create the messages which will be displayed
+
+    if Gecko_win_id ~= nil and vim.api.nvim_win_is_valid(Gecko_win_id) then
+        local contents = create_price_data()
+        set_buffer_contents(Gecko_buf, contents)
+    else
+        print("Window does not exists, no price data will be shown")
+    end
+end
+
 function M.toggle_window()
     if Gecko_win_id ~= nil and vim.api.nvim_win_is_valid(Gecko_win_id) then
         close_window()
@@ -62,12 +111,12 @@ function M.toggle_window()
     Gecko_win_id = win_info.win_id
     Gecko_buf = win_info.bufnr
 
-    set_buffer_contents(Gecko_buf, { "gm!", "We are gonna make it" })
+    set_buffer_contents(Gecko_buf, { "gm!", "We are gonna make it", "hahaha" })
 
     vim.api.nvim_buf_set_keymap(
         Gecko_buf,
         "n",
-        "q",
+        "<leader>zt",
         ":lua require('gecko.ui').toggle_window()<CR>",
         { silent = true }
     )
