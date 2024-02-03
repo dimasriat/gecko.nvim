@@ -45,7 +45,6 @@ function M.fetch_api()
 
     local lines = {}
     local response_decoded = vim.fn.json_decode(response)
-    -- iterate response_decoded element, then convertt json object to string, add to lines
     for _, coin in ipairs(response_decoded) do
         table.insert(lines, vim.fn.json_encode(coin))
     end
