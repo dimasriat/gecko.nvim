@@ -37,6 +37,7 @@ local function create_split_buffer(lines)
     local buf = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_win_set_buf(win, buf)
     vim.api.nvim_buf_set_lines(buf, 0, #lines, false, lines)
+    vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
     return win, buf
 end
 
