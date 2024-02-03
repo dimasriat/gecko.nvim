@@ -46,28 +46,69 @@ local function generate_finder_result()
     local lines = {}
     local response_decoded = vim.fn.json_decode(response)
     for _, coin in ipairs(response_decoded) do
-        local line = "[" .. coin['id'] .. "] " .. coin['name'] .. " (" .. coin['symbol'] .. ")"
-        table.insert(lines, line)
+        -- local line = "[" .. coin['id'] .. "] " .. coin['name'] .. " (" .. coin['symbol'] .. ")"
+        local coin_data = {
+            coin['id'],
+            coin['name'],
+            coin['symbol'],
+        }
+
+        table.insert(lines, coin_data)
     end
 
     return lines
 end
 
+local function generate_coin_detail_buffers(json)
+    local raw_contents = {
+        title = json['name'] .. " (" .. json['symbol'] .. ")",
+        contents = json['description']['en'],
+        link = json['links']['homepage'][1],
+        price_usd = json['market_data']['current_price']['usd'] .. " USD",
+    }
+
+    local title = json['name'] .. " (" .. json['symbol'] .. ")"
+    local link = json['links']['homepage'][1]
+    local price_usd = json['market_data']['current_price']['usd'] .. " USD"
+
+    local lines = {
+        title,
+        "",
+        "Link: " .. link,
+        "",
+        "Price: " .. price_usd,
+        -- "Description: " .. json['description']['en'],
+    }
+
+    return lines
+end
+
 local function generate_finder_action(coin_id)
-    create_split_buffer({ coin_id })
+    local response = fetch_coingecko_coin_details(coin_id)
+    local json = vim.fn.json_decode(response)
+    local lines = generate_coin_detail_buffers(json)
+
+    create_split_buffer(lines)
 end
 
 local generate_new_finder = function()
     local result = generate_finder_result()
     return finders.new_table {
         results = result,
+        entry_maker = function(entry)
+            return {
+                value = entry[1],
+                display = entry[1] .. " : " .. entry[2] .. " (" .. entry[3] .. ")",
+                ordinal = entry[1],
+            }
+        end
+
     }
 end
 
 -- our picker function: colors
 local colors = function(opts)
     opts = opts or {}
-    print(vim.inspect(opts))
     pickers.new(opts, {
         prompt_title = "Find Coins",
         finder = generate_new_finder(),
@@ -76,7 +117,8 @@ local colors = function(opts)
             actions.select_default:replace(function()
                 actions.close(prompt_bufnr)
                 local selection = action_state.get_selected_entry()
-                local coin_id = (selection[1])
+                -- print(vim.inspect(selection))
+                local coin_id = selection['value']
                 generate_finder_action(coin_id)
             end)
             return true
