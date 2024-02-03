@@ -1,39 +1,8 @@
 local curl = require("plenary.curl")
 
--------------------- Internal Helpers --------------------
-
-local function fetch_api(req_url, decode_body_as_json)
-    local response = curl.request{
-        url=req_url,
-        method="get",
-        accept="application/json"
-    }
-
-    local response_decoded = nil
-
-    if response.status ~= 200 then
-        return {success=false, json_table=response_decoded}
-    end
-
-    if decode_body_as_json then
-        response_decoded = vim.fn.json_decode(response.body)
-    end
-
-    return {success=true, json_table=response_decoded}
-end
-
 -------------------- Module Helpers --------------------
 
 local function fetch_coingecko_coins_list()
-    -- local req_url = "https://api.coingecko.com/api/v3/coins/list"
-    -- local resp = fetch_api(req_url, true)
-    -- 
-    -- if not resp.success then
-    --     error("Could not make request")
-    -- end
-
-    -- return resp.json_table
-    --
     -- local req_url = "https://api.coingecko.com/api/v3/coins/list"
     local req_url = "https://api.coingecko.com/api/v3/ping"
     local response = curl.request{
@@ -43,10 +12,8 @@ local function fetch_coingecko_coins_list()
     }
     if response.status ~= 200 then
         error("Could not make request")
-        -- return {success=false, json_table=response_decoded}
     end
-    local result = vim.fn.json_decode(response.body)
-    return result
+    return response.body
 end
 
 -------------------- Main --------------------
@@ -67,7 +34,13 @@ end
 function M.fetch_api()
     local response = fetch_coingecko_coins_list()
     print("hello world gm")
-    print(response["gecko_says"])
+
+    print("Response as string:")
+    print(response)
+
+    print("Response as JSON:")
+    local response_decoded = vim.fn.json_decode(response)
+    print(response_decoded['gecko_says'])
 end
 
 function M.split()
