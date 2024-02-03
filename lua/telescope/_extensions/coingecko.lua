@@ -7,21 +7,16 @@ local action_state = require "telescope.actions.state"
 local utils = require('gecko.utils')
 local api = require('gecko.api')
 
-local function generate_finder_result()
+local function generate_new_finder()
     local coin_list = api.get_coin_list()
 
     local lines = {}
     for _, coin in ipairs(coin_list) do
-        local coin_data = {
-            coin['id'],
-            coin['name'],
-            coin['symbol'],
-        }
-
-        table.insert(lines, coin_data)
+        local line = coin['id'] .. " : " .. coin['name'] .. " (" .. coin['symbol'] .. ")"
+        table.insert(lines, line)
     end
 
-    return lines
+    return finders.new_table({ results = lines })
 end
 
 local function generate_coin_detail_buffers(json)
@@ -66,26 +61,9 @@ local function generate_finder_action(coin_display)
     utils.create_split_buffer(lines)
 end
 
-local generate_new_finder = function()
-    local result = generate_finder_result()
-    return finders.new_table {
-        results = result,
-        entry_maker = function(entry)
-            local display = entry[1] .. " : " .. entry[2] .. " (" .. entry[3] .. ")"
-            return {
-                value = display,
-                display = display,
-                ordinal = display
-            }
-        end
-
-    }
-end
-
--- our picker function: colors
-local coin_finder = function(opts)
+local function telescope_picker(opts)
     opts = opts or {}
-    pickers.new(opts, {
+    return pickers.new(opts, {
         prompt_title = "Find Coins",
         finder = generate_new_finder(),
         sorter = conf.generic_sorter(opts),
@@ -103,5 +81,6 @@ local coin_finder = function(opts)
     }):find()
 end
 
--- to execute the function
-coin_finder()
+telescope_picker()
+
+return telescope_picker
