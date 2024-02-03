@@ -4,7 +4,6 @@ local curl = require("plenary.curl")
 
 local function fetch_coingecko_coins_list()
     local req_url = "https://api.coingecko.com/api/v3/coins/list?include_platform=true"
-    -- local req_url = "https://api.coingecko.com/api/v3/ping"
     local response = curl.request {
         url = req_url,
         method = "get",
