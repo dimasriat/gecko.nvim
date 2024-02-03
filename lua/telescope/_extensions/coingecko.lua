@@ -7,18 +7,6 @@ local action_state = require "telescope.actions.state"
 local utils = require('gecko.utils')
 local api = require('gecko.api')
 
-local function generate_new_finder()
-    local coin_list = api.get_coin_list()
-
-    local lines = {}
-    for _, coin in ipairs(coin_list) do
-        local line = coin['id'] .. " : " .. coin['name'] .. " (" .. coin['symbol'] .. ")"
-        table.insert(lines, line)
-    end
-
-    return finders.new_table({ results = lines })
-end
-
 local function generate_coin_detail_buffers(json)
     local title = json['name'] .. " (" .. json['symbol'] .. ")"
     local link = json['links']['homepage'][1]
@@ -51,6 +39,18 @@ local function generate_coin_detail_buffers(json)
     end
 
     return lines
+end
+
+local function generate_new_finder()
+    local coin_list = api.get_coin_list()
+
+    local lines = {}
+    for _, coin in ipairs(coin_list) do
+        local line = coin['id'] .. " : " .. coin['name'] .. " (" .. coin['symbol'] .. ")"
+        table.insert(lines, line)
+    end
+
+    return finders.new_table({ results = lines })
 end
 
 local function generate_finder_action(coin_display)
