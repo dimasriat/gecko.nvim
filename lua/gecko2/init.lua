@@ -66,8 +66,8 @@ end
 -- lua require("gecko2").fetch_api()
 function M.fetch_api()
     local response = fetch_coingecko_coins_list()
-    print("hello world hihihi")
-    -- print(response)
+    print("hello world gm")
+    print(response["gecko_says"])
 end
 
 function M.split()
