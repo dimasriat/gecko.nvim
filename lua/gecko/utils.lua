@@ -29,11 +29,12 @@ function M.create_separator(symbol)
         symbol = ""
     end
     local lines = ""
-    -- iterate symbol  80 times and add to lines
     for _ = 1, 80 do
         lines = lines .. symbol
     end
     return lines
 end
+
+-- TODO: add description parser
 
 return M
