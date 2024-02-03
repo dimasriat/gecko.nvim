@@ -6,6 +6,14 @@ function M.hello()
     print("Wen lambo?")
 end
 
+function M.split()
+    vim.cmd('vsplit')
+    local win = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_create_buf(true, true)
+    vim.api.nvim_win_set_buf(win, buf)
+    vim.api.nvim_buf_set_lines(buf, 0, 1, false, {"Hello, world!"})
+end
+
 function M.toggle()
     gecko_ui.toggle_window()
 end
@@ -24,7 +32,8 @@ function M.setup(opts)
     set_default("window_width", 60)
     set_default("window_height", 10)
 
-    vim.api.nvim_set_keymap('n', '<leader>zt', '<cmd>lua require("gecko").toggle()<CR>', { noremap = true, silent = true })
+    vim.api.nvim_set_keymap('n', '<leader>zs', '<cmd>lua require("gecko").split()<CR>',
+        { noremap = true, silent = true })
 end
 
 -- Default config setup
