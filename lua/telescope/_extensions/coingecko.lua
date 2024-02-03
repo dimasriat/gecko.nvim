@@ -46,7 +46,6 @@ local function generate_finder_result()
     local lines = {}
     local response_decoded = vim.fn.json_decode(response)
     for _, coin in ipairs(response_decoded) do
-        -- local line = "[" .. coin['id'] .. "] " .. coin['name'] .. " (" .. coin['symbol'] .. ")"
         local coin_data = {
             coin['id'],
             coin['name'],
@@ -59,31 +58,56 @@ local function generate_finder_result()
     return lines
 end
 
-local function generate_coin_detail_buffers(json)
-    local raw_contents = {
-        title = json['name'] .. " (" .. json['symbol'] .. ")",
-        contents = json['description']['en'],
-        link = json['links']['homepage'][1],
-        price_usd = json['market_data']['current_price']['usd'] .. " USD",
-    }
+local function create_separator(symbol)
+    if symbol == nil then
+        symbol = ""
+    end
+    local lines = ""
+    -- iterate symbol  80 times and add to lines
+    for _ = 1, 80 do
+        lines = lines .. symbol
+    end
+    return lines
+end
 
+local function generate_coin_detail_buffers(json)
     local title = json['name'] .. " (" .. json['symbol'] .. ")"
     local link = json['links']['homepage'][1]
     local price_usd = json['market_data']['current_price']['usd'] .. " USD"
+    local platform = json['platforms']
+    print(vim.inspect(platform))
+
+    -- iterate
 
     local lines = {
         title,
         "",
         "Link: " .. link,
         "",
+        create_separator("="),
+        "Market Data: ",
+        "",
         "Price: " .. price_usd,
         -- "Description: " .. json['description']['en'],
+        "",
+        create_separator("="),
+        "Address accross chain: ",
     }
+
+    for k, v in pairs(platform) do
+        table.insert(lines, "")
+        table.insert(lines, k)
+        table.insert(lines, v)
+        print(vim.inspect(k .. v))
+    end
 
     return lines
 end
 
-local function generate_finder_action(coin_id)
+local function generate_finder_action(coin_display)
+    -- coin_display == "foo-spam : bar (baz)"
+    -- need to get coin_id = "foo-spam" which is everything before " :"
+    local coin_id = string.match(coin_display, "(.-) :")
     local response = fetch_coingecko_coin_details(coin_id)
     local json = vim.fn.json_decode(response)
     local lines = generate_coin_detail_buffers(json)
@@ -96,10 +120,11 @@ local generate_new_finder = function()
     return finders.new_table {
         results = result,
         entry_maker = function(entry)
+            local display = entry[1] .. " : " .. entry[2] .. " (" .. entry[3] .. ")"
             return {
-                value = entry[1],
-                display = entry[1] .. " : " .. entry[2] .. " (" .. entry[3] .. ")",
-                ordinal = entry[1],
+                value = display,
+                display = display,
+                ordinal = display
             }
         end
 
