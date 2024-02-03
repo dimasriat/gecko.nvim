@@ -1,5 +1,7 @@
 local curl = require("plenary.curl")
 
+local utils = require('gecko.utils')
+
 -------------------- Module Helpers --------------------
 
 local function fetch_coingecko_coins_list()
@@ -13,15 +15,6 @@ local function fetch_coingecko_coins_list()
         error("Could not make request")
     end
     return response.body
-end
-
-local function create_split_buffer(lines)
-    vim.cmd('vsplit')
-    local win = vim.api.nvim_get_current_win()
-    local buf = vim.api.nvim_create_buf(true, true)
-    vim.api.nvim_win_set_buf(win, buf)
-    vim.api.nvim_buf_set_lines(buf, 0, #lines, false, lines)
-    return win, buf
 end
 
 -------------------- Main --------------------
@@ -47,7 +40,7 @@ function M.fetch_api()
     for _, coin in ipairs(response_decoded) do
         table.insert(lines, vim.fn.json_encode(coin))
     end
-    create_split_buffer(lines)
+    utils.create_split_buffer(lines)
 end
 
 function M.split()
