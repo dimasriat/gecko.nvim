@@ -18,6 +18,19 @@ local function fetch_coingecko_coins_list()
     return response.body
 end
 
+local function fetch_coingecko_coin_details(coin_id)
+    local req_url = "https://api.coingecko.com/api/v3/coins/" .. coin_id
+    local response = curl.request {
+        url = req_url,
+        method = "get",
+        accept = "application/json"
+    }
+    if response.status ~= 200 then
+        error("Could not make request")
+    end
+    return response.body
+end
+
 local function create_split_buffer(lines)
     vim.cmd('vsplit')
     local win = vim.api.nvim_get_current_win()
@@ -40,6 +53,9 @@ local function generate_finder_result()
     return lines
 end
 
+local function generate_finder_action(coin_id)
+    create_split_buffer({ coin_id })
+end
 
 local generate_new_finder = function()
     local result = generate_finder_result()
@@ -60,7 +76,8 @@ local colors = function(opts)
             actions.select_default:replace(function()
                 actions.close(prompt_bufnr)
                 local selection = action_state.get_selected_entry()
-                create_split_buffer({ selection[1] })
+                local coin_id = (selection[1])
+                generate_finder_action(coin_id)
             end)
             return true
         end,
