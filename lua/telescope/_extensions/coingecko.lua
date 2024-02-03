@@ -5,14 +5,13 @@ local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 
 local utils = require('gecko.utils')
+local api = require('gecko.api')
 
 local function generate_finder_result()
-    local req_url = "https://api.coingecko.com/api/v3/coins/list"
-    local response = utils.fetch_url(req_url)
+    local coin_list = api.get_coin_list()
 
     local lines = {}
-    local response_decoded = vim.fn.json_decode(response)
-    for _, coin in ipairs(response_decoded) do
+    for _, coin in ipairs(coin_list) do
         local coin_data = {
             coin['id'],
             coin['name'],
@@ -60,13 +59,9 @@ local function generate_coin_detail_buffers(json)
 end
 
 local function generate_finder_action(coin_display)
-    -- coin_display == "foo-spam : bar (baz)"
-    -- need to get coin_id = "foo-spam" which is everything before " :"
     local coin_id = string.match(coin_display, "(.-) :")
-    local req_url = "https://api.coingecko.com/api/v3/coins/" .. coin_id
-    local response = utils.fetch_url(req_url)
-    local json = vim.fn.json_decode(response)
-    local lines = generate_coin_detail_buffers(json)
+    local coin_detail = api.get_coin_detail(coin_id)
+    local lines = generate_coin_detail_buffers(coin_detail)
 
     utils.create_split_buffer(lines)
 end
