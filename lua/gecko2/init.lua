@@ -3,8 +3,8 @@ local curl = require("plenary.curl")
 -------------------- Module Helpers --------------------
 
 local function fetch_coingecko_coins_list()
-    -- local req_url = "https://api.coingecko.com/api/v3/coins/list"
-    local req_url = "https://api.coingecko.com/api/v3/ping"
+    local req_url = "https://api.coingecko.com/api/v3/coins/list?include_platform=true"
+    -- local req_url = "https://api.coingecko.com/api/v3/ping"
     local response = curl.request {
         url = req_url,
         method = "get",
@@ -16,12 +16,12 @@ local function fetch_coingecko_coins_list()
     return response.body
 end
 
-local function create_split_buffer(line)
+local function create_split_buffer(lines)
     vim.cmd('vsplit')
     local win = vim.api.nvim_get_current_win()
     local buf = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_win_set_buf(win, buf)
-    vim.api.nvim_buf_set_lines(buf, 0, 1, false, { line })
+    vim.api.nvim_buf_set_lines(buf, 0, #lines, false, lines)
     return win, buf
 end
 
@@ -41,8 +41,15 @@ end
 
 -- lua require("gecko2").fetch_api()
 function M.fetch_api()
-    local json_str = fetch_coingecko_coins_list()
-    create_split_buffer(json_str)
+    local response = fetch_coingecko_coins_list()
+
+    local lines = {}
+    local response_decoded = vim.fn.json_decode(response)
+    -- iterate response_decoded element, then convertt json object to string, add to lines
+    for _, coin in ipairs(response_decoded) do
+        table.insert(lines, vim.fn.json_encode(coin))
+    end
+    create_split_buffer(lines)
 end
 
 function M.split()
