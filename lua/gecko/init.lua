@@ -29,8 +29,8 @@ end
 local M = {}
 
 function M.setup(opts)
-    require('plenary.reload').reload_module('gecko2', true)
-    vim.api.nvim_set_keymap('n', '<leader>zs', '<cmd>lua require("gecko2").fetch_api()<CR>',
+    require('plenary.reload').reload_module('gecko', true)
+    vim.api.nvim_set_keymap('n', '<leader>zs', '<cmd>lua require("gecko").fetch_api()<CR>',
         { noremap = true, silent = true })
 end
 
@@ -38,7 +38,7 @@ function M.hello()
     print("Wen lambo?")
 end
 
--- lua require("gecko2").fetch_api()
+-- lua require("gecko").fetch_api()
 function M.fetch_api()
     local response = fetch_coingecko_coins_list()
 
