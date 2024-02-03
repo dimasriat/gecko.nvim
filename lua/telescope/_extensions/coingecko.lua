@@ -3,6 +3,20 @@ local pickers = require("telescope.pickers")
 local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
+local curl = require("plenary.curl")
+
+local function fetch_coingecko_coins_list()
+    local req_url = "https://api.coingecko.com/api/v3/coins/list"
+    local response = curl.request {
+        url = req_url,
+        method = "get",
+        accept = "application/json"
+    }
+    if response.status ~= 200 then
+        error("Could not make request")
+    end
+    return response.body
+end
 
 local function create_split_buffer(lines)
     vim.cmd('vsplit')
@@ -13,8 +27,22 @@ local function create_split_buffer(lines)
     return win, buf
 end
 
+local function generate_finder_result()
+    local response = fetch_coingecko_coins_list()
+
+    local lines = {}
+    local response_decoded = vim.fn.json_decode(response)
+    for _, coin in ipairs(response_decoded) do
+        local line = "[" .. coin['id'] .. "] " .. coin['name'] .. " (" .. coin['symbol'] .. ")"
+        table.insert(lines, line)
+    end
+
+    return lines
+end
+
+
 local generate_new_finder = function()
-    local result = { "red", "green", "blue" }
+    local result = generate_finder_result()
     return finders.new_table {
         results = result,
     }
@@ -22,7 +50,7 @@ end
 
 -- our picker function: colors
 local colors = function(opts)
-    opts = opts or { "red", "green", "blue" }
+    opts = opts or {}
     print(vim.inspect(opts))
     pickers.new(opts, {
         prompt_title = "Find Coins",
