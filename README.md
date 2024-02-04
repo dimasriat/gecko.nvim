@@ -1,4 +1,4 @@
-# gecko.nvim
+# gecko.nvim 🦎
 
 ![gecko](gecko.png)
 
