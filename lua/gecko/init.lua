@@ -1,18 +1,17 @@
 local telescope = require('telescope')
+local gecko = telescope.load_extension('gecko')
 
 local M = {}
 
-function M.setup(opts)
-    telescope.load_extension('gecko')
-    vim.api.nvim_set_keymap('n', '<leader>zs', '<cmd>lua require("gecko").hello()<CR>',
-        { noremap = true, silent = true })
+function M.find_coin()
+    gecko.find_coin()
 end
 
-function M.hello()
+function M.reload()
     require('plenary.reload').reload_module('gecko', true)
-    print("Wen lambo?")
+    print("Gecko Reloaded! wen lambo?")
 end
 
-M.setup({})
+vim.keymap.set('n', '<leader>zs', M.find_coin, {})
 
 return M
