@@ -12,6 +12,4 @@ function M.reload()
     print("Gecko Reloaded! wen lambo?")
 end
 
-vim.keymap.set('n', '<leader>zs', M.find_coin, {})
-
 return M
