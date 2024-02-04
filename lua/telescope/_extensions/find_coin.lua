@@ -61,7 +61,7 @@ local function generate_finder_action(coin_display)
     utils.create_split_buffer(lines)
 end
 
-local function telescope_picker(opts)
+local function find_coin(opts)
     opts = opts or {}
     return pickers.new(opts, {
         prompt_title = "Find Coins",
@@ -81,6 +81,6 @@ local function telescope_picker(opts)
     }):find()
 end
 
-telescope_picker()
+-- telescope_picker()
 
-return telescope_picker
+return find_coin
