@@ -63,8 +63,8 @@ local function generate_finder_action(coin_display)
         { "Official Forum",   coin_detail['links']['official_forum_url'] },
         { "Chat URL",         coin_detail['links']['chat_url'] },
         { "Announcement URL", coin_detail['links']['announcement_url'] },
-        { "Twitter",          { coin_detail['links']['twitter_screen_name'] } },
-        { "Telegram",         { coin_detail['links']['telegram_channel_identifier'] } },
+        { "Twitter",          { "https://twitter.com/" .. coin_detail['links']['twitter_screen_name'] } },
+        { "Telegram",         { "https://t.me/" .. coin_detail['links']['telegram_channel_identifier'] } },
         { "Github",           coin_detail['links']['repos_url']['github'] },
     })
 
