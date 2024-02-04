@@ -2,6 +2,13 @@
 
 ![gecko](gecko.png)
 
+<div align="center">
+    
+[![Lua](https://img.shields.io/badge/Lua-blue.svg?style=for-the-badge&logo=lua)](http://www.lua.org)
+[![Neovim](https://img.shields.io/badge/Neovim%200.5+-green.svg?style=for-the-badge&logo=neovim)](https://neovim.io)
+
+</div>
+
 `gecko.nvim` is a Neovim plugin that leverages the capabilities of both Plenary and Telescope to allow users to search for cryptocurrency details directly from CoinGecko. This plugin offers a seamless and efficient way for developers and cryptocurrency enthusiasts to stay updated with the latest coin information without leaving their editor.
 
 ## Purpose of This Plugin
@@ -59,3 +66,4 @@ Contributions are welcome! If you'd like to contribute, please fork the reposito
 
 - Thanks to the [Telescope](https://github.com/nvim-telescope/telescope.nvim) and [Plenary](https://github.com/nvim-lua/plenary.nvim) contributors.
 - Cryptocurrency data provided by [CoinGecko](https://www.coingecko.com/).
+
