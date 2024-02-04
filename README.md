@@ -1,5 +1,7 @@
 # gecko.nvim
 
+![gecko](gecko.png)
+
 `gecko.nvim` is a Neovim plugin that leverages the capabilities of both Plenary and Telescope to allow users to search for cryptocurrency details directly from CoinGecko. This plugin offers a seamless and efficient way for developers and cryptocurrency enthusiasts to stay updated with the latest coin information without leaving their editor.
 
 ## Purpose of This Plugin
