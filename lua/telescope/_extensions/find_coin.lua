@@ -26,6 +26,8 @@ local function generate_finder_action(coin_display)
 
     local ob = OutputBuilder.new()
 
+    ob:push_buffer_line("Last updated: " .. coin_detail['last_updated'])
+
     -- overview
     ob:add_content("OVERVIEW", {
         { "Name",   { coin_detail['name'] } },
