@@ -48,14 +48,21 @@ function OutputBuilder:output_window()
     return win, buf
 end
 
-function OutputBuilder:add_content(heading, content)
+function OutputBuilder:add_content(heading, list_groups)
     self:add_heading(heading)
-    for _, list_group in ipairs(content) do
+    self:add_list(list_groups)
+end
+
+function OutputBuilder:add_list(list_groups)
+    for _, list_group in ipairs(list_groups) do
         local list_title = list_group[1]
         local list_contents = list_group[2]
+        print(vim.inspect(list_contents))
         self:push_buffer_line(list_title .. ":")
         for _, list_content in ipairs(list_contents) do
-            self:push_buffer_line("*\t" .. list_content)
+            if list_content ~= vim.NIL and list_content ~= "" then
+                self:push_buffer_line("*\t" .. list_content)
+            end
         end
         self:push_buffer_line("")
     end
@@ -66,7 +73,7 @@ return OutputBuilder
 -- example
 
 -- local ob = OutputBuilder.new()
--- 
+--
 -- ob:add_content("OVERVIEW", {
 --     { "Name",   { "Chainlink" } },
 --     { "Symbol", { "LINK" } },
@@ -87,5 +94,5 @@ return OutputBuilder
 --         }
 --     },
 -- })
--- 
+--
 -- ob:output_window()

@@ -36,4 +36,23 @@ describe("OutputBuilder", function()
             assert.same(expected, actual)
         end)
     end)
+
+    describe("add_heading", function()
+        it("should add a heading to the output", function()
+            -- arrange
+            local heading = "Hello, world!"
+            local expected = {
+                "================================================================================",
+                heading,
+                ""
+            }
+
+            -- act
+            ob:add_heading("Hello, world!")
+            local actual = ob:get_buffer_lines()
+
+            -- assert
+            assert.same(expected, actual)
+        end)
+    end)
 end)
