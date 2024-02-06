@@ -4,7 +4,7 @@ local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 
-local OutputBuilder = require('gecko.output')
+local ResultBuilder = require('gecko.result_builder')
 
 local api = require('gecko.api')
 
@@ -23,26 +23,19 @@ end
 local function generate_finder_action(coin_display)
     local coin_id = string.match(coin_display, "(.-) :")
     local coin_detail = api.get_coin_detail(coin_id)
+    local rb = ResultBuilder.new()
+    rb:push_buffer_line("Last updated: " .. coin_detail['last_updated'])
 
-    local ob = OutputBuilder.new()
+    rb:add_heading("OVERVIEW")
+    rb:add_content("Name", { coin_detail['name'] })
+    rb:add_content("Symbol", { coin_detail['symbol'] })
 
-    ob:push_buffer_line("Last updated: " .. coin_detail['last_updated'])
+    rb:add_heading("MARKET DATA")
+    rb:add_content("Price", { coin_detail['market_data']['current_price']['usd'] .. " USD" })
+    rb:add_content("Market Cap", { coin_detail['market_data']['market_cap']['usd'] .. " USD" })
+    rb:add_content("Total Volume", { coin_detail['market_data']['total_volume']['usd'] .. " USD" })
 
-    -- overview
-    ob:add_content("OVERVIEW", {
-        { "Name",   { coin_detail['name'] } },
-        { "Symbol", { coin_detail['symbol'] } },
-    })
-
-    -- market data
-    ob:add_content("MARKET DATA", {
-        { "Price",        { coin_detail['market_data']['current_price']['usd'] .. " USD" } },
-        { "Market Cap",   { coin_detail['market_data']['market_cap']['usd'] .. " USD" } },
-        { "Total Volume", { coin_detail['market_data']['total_volume']['usd'] .. " USD" } },
-    })
-
-    -- platforms
-    local platform_list = {}
+    rb:add_heading("PLATFORMS")
     for platform_id, platform_value in pairs(coin_detail['detail_platforms']) do
         if platform_id ~= "" then
             local list = {}
@@ -52,25 +45,21 @@ local function generate_finder_action(coin_display)
             if platform_value['decimal_place'] ~= vim.NIL then
                 table.insert(list, "decimals: " .. platform_value['decimal_place'])
             end
-            table.insert(platform_list, { platform_id, list })
+            rb:add_content(platform_id, list)
         end
     end
-    ob:add_content("PLATFORMS", platform_list)
 
-    -- links
-    ob:add_content("LINKS", {
-        { "CoinGecko",        { "https://www.coingecko.com/en/coins/" .. coin_detail['web_slug'] } },
-        { "Homepage",         coin_detail['links']['homepage'] },
-        { "Blockchain Site",  coin_detail['links']['blockchain_site'] },
-        { "Official Forum",   coin_detail['links']['official_forum_url'] },
-        { "Chat URL",         coin_detail['links']['chat_url'] },
-        { "Announcement URL", coin_detail['links']['announcement_url'] },
-        { "Twitter",          { "https://twitter.com/" .. coin_detail['links']['twitter_screen_name'] } },
-        { "Telegram",         { "https://t.me/" .. coin_detail['links']['telegram_channel_identifier'] } },
-        { "Github",           coin_detail['links']['repos_url']['github'] },
-    })
-
-    ob:output_window()
+    rb:add_heading("RESOURCES")
+    rb:add_content("CoinGecko", { "https://www.coingecko.com/en/coins/" .. coin_detail['web_slug'] })
+    rb:add_content("Homepage", coin_detail['links']['homepage'])
+    rb:add_content("Blockchain Site", coin_detail['links']['blockchain_site'])
+    rb:add_content("Official Forum", coin_detail['links']['official_forum_url'])
+    rb:add_content("Chat URL", coin_detail['links']['chat_url'])
+    rb:add_content("Announcement URL", coin_detail['links']['announcement_url'])
+    rb:add_content("Twitter", { "https://twitter.com/" .. coin_detail['links']['twitter_screen_name'] })
+    rb:add_content("Telegram", { rb:line_modifier("https://t.me/", coin_detail['links']['telegram_channel_identifier']) })
+    rb:add_content("Github", coin_detail['links']['repos_url']['github'])
+    rb:output_window()
 end
 
 local function find_coin(opts)
