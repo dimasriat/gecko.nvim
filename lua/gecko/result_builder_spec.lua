@@ -122,4 +122,65 @@ describe("ResultBuilder", function ()
             assert.same(expected, actual)
         end)
     end)
+
+    describe("utils", function ()
+        describe("line_modifier", function ()
+            it("should add a prefix to the line", function ()
+                -- arrange
+                local prefix = "https://example.com/"
+                local line = "foo"
+                local expected = "https://example.com/foo"
+                local rb = ResultBuilder.new()
+
+                -- act
+                local actual = rb:line_modifier(prefix, line)
+
+                -- assert
+                assert.same(expected, actual)
+            end)
+
+            it("should not add a prefix if the line is empty", function ()
+                -- arrange
+                local prefix = "https://example.com/"
+                local line = ""
+                local expected = ""
+                local rb = ResultBuilder.new()
+
+                -- act
+                local actual = rb:line_modifier(prefix, line)
+
+                -- assert
+                assert.same(expected, actual)
+            end)
+
+            it("should not add a prefix if the line is nil", function ()
+                -- arrange
+                local prefix = "https://example.com/"
+                local line = vim.NIL
+                local expected = vim.NIL
+                local rb = ResultBuilder.new()
+
+                -- act
+                local actual = rb:line_modifier(prefix, line)
+
+                -- assert
+                assert.same(expected, actual)
+            end)
+        end)
+
+        describe("description_parser", function ()
+            it("should split \\r\\n to a new line", function ()
+                -- arrange
+                local input = "foo\r\nbar"
+                local expected = { "foo", "bar" }
+                local rb = ResultBuilder.new()
+
+                -- act
+                local actual = rb:description_parser(input)
+
+                -- assert
+                assert.same(expected, actual)
+            end)
+        end)
+    end)
 end)

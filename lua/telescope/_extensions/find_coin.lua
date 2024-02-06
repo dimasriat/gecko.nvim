@@ -29,6 +29,7 @@ local function generate_finder_action(coin_display)
     rb:add_heading("OVERVIEW")
     rb:add_content("Name", { coin_detail['name'] })
     rb:add_content("Symbol", { coin_detail['symbol'] })
+    rb:add_content("Description", rb:description_parser(coin_detail['description']['en']))
 
     rb:add_heading("MARKET DATA")
     rb:add_content("Price", { coin_detail['market_data']['current_price']['usd'] .. " USD" })

@@ -65,6 +65,14 @@ function ResultBuilder:line_modifier(prefix, line)
     end
 end
 
+function ResultBuilder:description_parser(description)
+    local lines = {}
+    for line in string.gmatch(description, "[^\r\n]+") do
+        table.insert(lines, line)
+    end
+    return lines
+end
+
 function ResultBuilder:output_window()
     local lines = self.buffer_lines
     vim.cmd('vsplit')
