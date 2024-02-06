@@ -1,8 +1,8 @@
 local ResultBuilder = require("gecko.result_builder")
 
-describe("ResultBuilder", function ()
-    describe("push_buffer_line", function ()
-        it("should add a newline to the output", function ()
+describe("ResultBuilder", function()
+    describe("push_buffer_line", function()
+        it("should add a newline to the output", function()
             -- arrange
             local input = "Hello, world!"
             local expected = { input }
@@ -16,7 +16,7 @@ describe("ResultBuilder", function ()
             assert.same(expected, actual)
         end)
 
-        it("should add multiple lines to the output", function ()
+        it("should add multiple lines to the output", function()
             -- arrange
             local input1 = "Hello, world!"
             local input2 = "Goodbye, world!"
@@ -33,8 +33,8 @@ describe("ResultBuilder", function ()
         end)
     end)
 
-    describe("add_heading", function ()
-        it("should add a heading to the output", function ()
+    describe("add_heading", function()
+        it("should add a heading to the output", function()
             -- arrange
             local heading = "Hello, world!"
             local expected = {
@@ -53,8 +53,8 @@ describe("ResultBuilder", function ()
         end)
     end)
 
-    describe("filter_lines", function ()
-        it("should remove empty lines from the input", function ()
+    describe("filter_lines", function()
+        it("should remove empty lines from the input", function()
             -- arrange
             local input = {
                 "foo",
@@ -79,8 +79,8 @@ describe("ResultBuilder", function ()
         end)
     end)
 
-    describe("add_content", function ()
-        it("should add a title and lines to the output", function ()
+    describe("add_content", function()
+        it("should add a title and lines to the output", function()
             -- arrange
             local title = "Hello, world!"
             local lines = {
@@ -107,7 +107,7 @@ describe("ResultBuilder", function ()
             assert.same(expected, actual)
         end)
 
-        it("should not add a title if there are no lines", function ()
+        it("should not add a title if there are no lines", function()
             -- arrange
             local title = "Hello, world!"
             local lines = {}
@@ -123,9 +123,9 @@ describe("ResultBuilder", function ()
         end)
     end)
 
-    describe("utils", function ()
-        describe("line_modifier", function ()
-            it("should add a prefix to the line", function ()
+    describe("utils", function()
+        describe("line_modifier", function()
+            it("should add a prefix to the line", function()
                 -- arrange
                 local prefix = "https://example.com/"
                 local line = "foo"
@@ -139,7 +139,7 @@ describe("ResultBuilder", function ()
                 assert.same(expected, actual)
             end)
 
-            it("should not add a prefix if the line is empty", function ()
+            it("should not add a prefix if the line is empty", function()
                 -- arrange
                 local prefix = "https://example.com/"
                 local line = ""
@@ -153,7 +153,7 @@ describe("ResultBuilder", function ()
                 assert.same(expected, actual)
             end)
 
-            it("should not add a prefix if the line is nil", function ()
+            it("should not add a prefix if the line is nil", function()
                 -- arrange
                 local prefix = "https://example.com/"
                 local line = vim.NIL
@@ -168,11 +168,24 @@ describe("ResultBuilder", function ()
             end)
         end)
 
-        describe("description_parser", function ()
-            it("should split \\r\\n to a new line", function ()
+        describe("description_parser", function()
+            it("should split \\r\\n to a new line", function()
                 -- arrange
                 local input = "foo\r\nbar"
                 local expected = { "foo", "bar" }
+                local rb = ResultBuilder.new()
+
+                -- act
+                local actual = rb:description_parser(input)
+
+                -- assert
+                assert.same(expected, actual)
+            end)
+
+            it("should remove any html tags", function()
+                -- arrange
+                local input = "<p>foo</p><p>bar</p><a href='https://example.com'>baz</a>"
+                local expected = { "foobarbaz" }
                 local rb = ResultBuilder.new()
 
                 -- act

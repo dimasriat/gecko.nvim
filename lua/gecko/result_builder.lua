@@ -9,7 +9,6 @@ local function create_separator(symbol)
     return lines
 end
 
-
 local ResultBuilder = {}
 ResultBuilder.__index = ResultBuilder
 
@@ -67,9 +66,15 @@ end
 
 function ResultBuilder:description_parser(description)
     local lines = {}
+    -- remove any newlines and carriage returns
     for line in string.gmatch(description, "[^\r\n]+") do
         table.insert(lines, line)
     end
+    -- remove any html tags for each line
+    for i, line in ipairs(lines) do
+        lines[i] = string.gsub(line, "<[^>]+>", "")
+    end
+
     return lines
 end
 
