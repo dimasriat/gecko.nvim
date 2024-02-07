@@ -72,8 +72,8 @@ function CoinPicker:generate_finder_action(coin_display)
     rb:add_content("Telegram",
         { rb:line_modifier("https://t.me/", coin_detail['links']['telegram_channel_identifier'], "") })
     rb:add_content("Github", coin_detail['links']['repos_url']['github'])
+
     local lines = rb:get_buffer_lines()
-    print(vim.inspect(lines))
     self.ui:toggle_ui(lines)
 end
 
@@ -87,7 +87,6 @@ function CoinPicker:find_coin()
             actions.select_default:replace(function()
                 actions.close(prompt_bufnr)
                 local selection = action_state.get_selected_entry()
-                -- print(vim.inspect(selection))
                 local coin_display = selection['value']
                 self:generate_finder_action(coin_display)
             end)
