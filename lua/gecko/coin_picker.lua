@@ -49,14 +49,10 @@ function CoinPicker:generate_finder_action(coin_display)
     rb:add_heading("PLATFORMS")
     for platform_id, platform_value in pairs(coin_detail['detail_platforms']) do
         if platform_id ~= "" then
-            local list = {}
-            if platform_value['contract_address'] ~= vim.NIL then
-                table.insert(list, "address: " .. platform_value['contract_address'])
-            end
-            if platform_value['decimal_place'] ~= vim.NIL then
-                table.insert(list, "decimals: " .. platform_value['decimal_place'])
-            end
-            rb:add_content(platform_id, list)
+            rb:add_content(platform_id, {
+                rb:line_modifier("address: ", platform_value['contract_address'], ""),
+                rb:line_modifier("decimals: ", platform_value['decimal_place'], "")
+            })
         end
     end
 

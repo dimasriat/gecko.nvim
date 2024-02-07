@@ -76,7 +76,7 @@ describe("Ui", function()
             eq(gecko.ui:get_is_window_open(), true)
 
             -- type :q
-            vim.cmd("q")
+            -- TODO: still don't know how to test this
 
             eq(vim.api.nvim_win_is_valid(window_id), false)
             eq(vim.api.nvim_buf_is_valid(buffer_id), false)

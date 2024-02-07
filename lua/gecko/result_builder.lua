@@ -73,8 +73,10 @@ function ResultBuilder:generate_result_header(web_slug, last_updated)
     self:push_buffer_line("")
 
     local last_updated_with_label = self:line_modifier("Last updated: ", last_updated, "")
-    self:push_buffer_line(last_updated_with_label)
-    self:push_buffer_line("")
+    if last_updated_with_label ~= "" then
+        self:push_buffer_line(last_updated_with_label)
+        self:push_buffer_line("")
+    end
 end
 
 function ResultBuilder:get_buffer_lines()
