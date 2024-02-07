@@ -15,7 +15,7 @@ function CoinPicker:new(api, ui)
         selected_coin_id = nil,
     }
     local coin_picker = setmetatable(obj, self)
-    return coin_picker 
+    return coin_picker
 end
 
 function CoinPicker:generate_new_finder()
@@ -42,9 +42,9 @@ function CoinPicker:generate_finder_action(coin_display)
     rb:add_content("Description", rb:description_parser(coin_detail['description']['en']))
 
     rb:add_heading("MARKET DATA")
-    rb:add_content("Price", { coin_detail['market_data']['current_price']['usd'] .. " USD" })
-    rb:add_content("Market Cap", { coin_detail['market_data']['market_cap']['usd'] .. " USD" })
-    rb:add_content("Total Volume", { coin_detail['market_data']['total_volume']['usd'] .. " USD" })
+    rb:add_content("Price", { rb:line_modifier("", coin_detail['market_data']['current_price']['usd'], " USD") })
+    rb:add_content("Market Cap", { rb:line_modifier("", coin_detail['market_data']['market_cap']['usd'], " USD") })
+    rb:add_content("Total Volume", { rb:line_modifier("", coin_detail['market_data']['total_volume']['usd'], " USD") })
 
     rb:add_heading("PLATFORMS")
     for platform_id, platform_value in pairs(coin_detail['detail_platforms']) do
@@ -66,14 +66,16 @@ function CoinPicker:generate_finder_action(coin_display)
     rb:add_content("Official Forum", coin_detail['links']['official_forum_url'])
     rb:add_content("Chat URL", coin_detail['links']['chat_url'])
     rb:add_content("Announcement URL", coin_detail['links']['announcement_url'])
-    rb:add_content("Twitter", { "https://twitter.com/" .. coin_detail['links']['twitter_screen_name'] })
-    rb:add_content("Telegram", { rb:line_modifier("https://t.me/", coin_detail['links']['telegram_channel_identifier']) })
+    rb:add_content("Twitter", {
+        rb:line_modifier("https://twitter.com/", coin_detail['links']['twitter_screen_name'], "")
+    })
+    rb:add_content("Telegram",
+        { rb:line_modifier("https://t.me/", coin_detail['links']['telegram_channel_identifier'], "") })
     rb:add_content("Github", coin_detail['links']['repos_url']['github'])
-    -- rb:output_window()
     local lines = rb:get_buffer_lines()
+    print(vim.inspect(lines))
     self.ui:toggle_ui(lines)
 end
-
 
 function CoinPicker:find_coin()
     local opts = {}

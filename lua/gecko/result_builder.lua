@@ -66,12 +66,14 @@ function ResultBuilder:generate_result_header(web_slug, last_updated)
     for line in string.gmatch(header_text:match("^%s*(.-)%s*$"), "[^\r\n]+") do
         self:push_buffer_line(line)
     end
-
-    self:push_buffer_line("")
-    self:push_buffer_line("Source: " .. "https://www.coingecko.com/en/coins/" .. web_slug)
     self:push_buffer_line("")
 
-    self:push_buffer_line("Last updated: " .. last_updated)
+    local source_with_label = self:line_modifier("Source: https://www.coingecko.com/en/coins/", web_slug, "")
+    self:push_buffer_line(source_with_label)
+    self:push_buffer_line("")
+
+    local last_updated_with_label = self:line_modifier("Last updated: ", last_updated, "")
+    self:push_buffer_line(last_updated_with_label)
     self:push_buffer_line("")
 end
 
@@ -92,7 +94,7 @@ end
 function ResultBuilder:filter_lines(lines)
     local filtered_lines = {}
     for _, line in ipairs(lines) do
-        if line ~= "" and line ~= vim.NIL then
+        if line ~= "" and line ~= vim.NIL and line ~= nil then
             table.insert(filtered_lines, line)
         end
     end
@@ -112,17 +114,20 @@ function ResultBuilder:add_content(title, lines)
     end
 end
 
-function ResultBuilder:line_modifier(prefix, line)
+function ResultBuilder:line_modifier(prefix, line, suffix)
     -- only add the prefix if the line is not empty and not nil
-    if line ~= "" and line ~= vim.NIL then
-        return prefix .. line
+    if line ~= "" and line ~= vim.NIL and line ~= nil then
+        return prefix .. line .. suffix
     else
-        return line
+        return ""
     end
 end
 
 function ResultBuilder:description_parser(description)
     local lines = {}
+    if description == nil or description == vim.NIL then
+        return lines
+    end
     -- remove any newlines and carriage returns
     for line in string.gmatch(description, "[^\r\n]+") do
         table.insert(lines, line)

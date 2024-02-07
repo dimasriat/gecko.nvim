@@ -125,46 +125,94 @@ describe("ResultBuilder", function()
 
     describe("utils", function()
         describe("line_modifier", function()
-            it("should add a prefix to the line", function()
-                -- arrange
-                local prefix = "https://example.com/"
-                local line = "foo"
-                local expected = "https://example.com/foo"
-                local rb = ResultBuilder.new()
+            describe("prefix", function()
+                it("should add a prefix to the line", function()
+                    -- arrange
+                    local prefix = "https://example.com/"
+                    local line = "foo"
+                    local expected = "https://example.com/foo"
+                    local rb = ResultBuilder.new()
 
-                -- act
-                local actual = rb:line_modifier(prefix, line)
+                    -- act
+                    local actual = rb:line_modifier(prefix, line)
 
-                -- assert
-                assert.same(expected, actual)
+                    -- assert
+                    assert.same(expected, actual)
+                end)
+
+                it("should not add a prefix if the line is empty", function()
+                    -- arrange
+                    local prefix = "https://example.com/"
+                    local line = ""
+                    local expected = ""
+                    local rb = ResultBuilder.new()
+
+                    -- act
+                    local actual = rb:line_modifier(prefix, line)
+
+                    -- assert
+                    assert.same(expected, actual)
+                end)
+
+                it("should not add a prefix if the line is nil", function()
+                    -- arrange
+                    local prefix = "https://example.com/"
+                    local line = vim.NIL
+                    local expected = vim.NIL
+                    local rb = ResultBuilder.new()
+
+                    -- act
+                    local actual = rb:line_modifier(prefix, line)
+
+                    -- assert
+                    assert.same(expected, actual)
+                end)
             end)
+            describe("suffix", function()
+                it("should add a suffix to the line", function()
+                    -- arrange
+                    local prefix = "https://example.com/"
+                    local line = "foo"
+                    local suffix = "/bar"
+                    local expected = "https://example.com/foo/bar"
+                    local rb = ResultBuilder.new()
 
-            it("should not add a prefix if the line is empty", function()
-                -- arrange
-                local prefix = "https://example.com/"
-                local line = ""
-                local expected = ""
-                local rb = ResultBuilder.new()
+                    -- act
+                    local actual = rb:line_modifier(prefix, line, suffix)
 
-                -- act
-                local actual = rb:line_modifier(prefix, line)
+                    -- assert
+                    assert.same(expected, actual)
+                end)
 
-                -- assert
-                assert.same(expected, actual)
-            end)
+                it("should not add a suffix if the line is empty", function()
+                    -- arrange
+                    local prefix = "https://example.com/"
+                    local line = ""
+                    local suffix = "/bar"
+                    local expected = ""
+                    local rb = ResultBuilder.new()
 
-            it("should not add a prefix if the line is nil", function()
-                -- arrange
-                local prefix = "https://example.com/"
-                local line = vim.NIL
-                local expected = vim.NIL
-                local rb = ResultBuilder.new()
+                    -- act
+                    local actual = rb:line_modifier(prefix, line, suffix)
 
-                -- act
-                local actual = rb:line_modifier(prefix, line)
+                    -- assert
+                    assert.same(expected, actual)
+                end)
 
-                -- assert
-                assert.same(expected, actual)
+                it("should not add a suffix if the line is nil", function()
+                    -- arrange
+                    local prefix = "https://example.com/"
+                    local line = vim.NIL
+                    local suffix = "/bar"
+                    local expected = vim.NIL
+                    local rb = ResultBuilder.new()
+
+                    -- act
+                    local actual = rb:line_modifier(prefix, line, suffix)
+
+                    -- assert
+                    assert.same(expected, actual)
+                end)
             end)
         end)
 
