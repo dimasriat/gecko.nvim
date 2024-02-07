@@ -2,6 +2,14 @@ local gecko = require("gecko")
 
 local eq = assert.are.same
 
+local function key(k)
+    vim.api.nvim_feedkeys(
+        vim.api.nvim_replace_termcodes(k, true, false, true),
+        "x",
+        true
+    )
+end
+
 describe("Ui", function()
     describe("toggle_ui", function()
         it("should toggle the window and buffer", function()
@@ -32,7 +40,7 @@ describe("Ui", function()
             eq(gecko.ui:get_is_window_open(), true)
 
             -- press q
-            vim.api.nvim_input("q")
+            key("q")
 
             eq(vim.api.nvim_win_is_valid(window_id), false)
             eq(vim.api.nvim_buf_is_valid(buffer_id), false)
@@ -50,7 +58,7 @@ describe("Ui", function()
             eq(gecko.ui:get_is_window_open(), true)
 
             -- press esc
-            vim.api.nvim_input("<esc>")
+            key("<esc>")
 
             eq(vim.api.nvim_win_is_valid(window_id), false)
             eq(vim.api.nvim_buf_is_valid(buffer_id), false)
