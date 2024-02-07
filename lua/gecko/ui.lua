@@ -32,7 +32,6 @@ function Ui:toggle_ui()
         vim.api.nvim_win_set_buf(self.window_id, self.buffer_id)
         self.is_window_open = true
 
-        -- add keymap to close the window
         return
     end
     self:close_ui()
