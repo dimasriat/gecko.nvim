@@ -1,12 +1,13 @@
 local Ui = {}
 Ui.__index = Ui
 
-function Ui.new()
-    local instance = setmetatable({}, Ui)
-    instance.window_id = nil
-    instance.buffer_id = nil
-    instance.is_window_open = false
-    return instance
+function Ui:new()
+    local ui = setmetatable({
+        window_id = nil,
+        buffer_id = nil,
+        is_window_open = false,
+    }, self)
+    return ui
 end
 
 function Ui:toggle_ui()

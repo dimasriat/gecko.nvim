@@ -5,7 +5,7 @@ local eq = assert.are.same
 describe("Ui", function ()
     describe("toggle_ui", function ()
         it("should toggle the window and buffer", function ()
-            local ui = Ui.new()
+            local ui = Ui:new()
             ui:toggle_ui()
 
             local window_id = ui:get_window_id()
