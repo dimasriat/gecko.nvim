@@ -1,3 +1,5 @@
+local popup = require("plenary.popup")
+
 local Ui = {}
 Ui.__index = Ui
 
@@ -13,16 +15,20 @@ end
 
 function Ui:toggle_ui()
     if self.window_id == nil and self.buffer_id == nil then
-        self.window_id = vim.api.nvim_open_win(0, true, {
-            relative = "editor",
-            width = 80,
-            height = 20,
-            row = 10,
-            col = 10,
-            style = "minimal",
-            border = "single",
-        })
+        local width = 160
+        local height = 40
+        local borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
+
         self.buffer_id = vim.api.nvim_create_buf(false, true)
+        local window_id, _ = popup.create(self.buffer_id, {
+            title = "Results",
+            line = math.floor(((vim.o.lines - height) / 2)),
+            col = math.floor((vim.o.columns - width) / 2),
+            minwidth = width,
+            minheight = height,
+            borderchars = borderchars,
+        })
+        self.window_id = window_id
         vim.api.nvim_win_set_buf(self.window_id, self.buffer_id)
         self.is_window_open = true
 
