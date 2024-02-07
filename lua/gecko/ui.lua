@@ -28,14 +28,6 @@ function Ui:toggle_ui(lines)
         -- set buffer content
         vim.api.nvim_buf_set_lines(buffer_id, 0, #lines, false, lines)
 
-        vim.keymap.set("n", "q", function()
-            self:close_ui()
-        end, { noremap = true, silent = true, buffer = buffer_id })
-
-        vim.keymap.set("n", "<esc>", function()
-            self:close_ui()
-        end, { noremap = true, silent = true, buffer = buffer_id })
-
         return
     end
     self:close_ui()
@@ -56,18 +48,38 @@ function Ui:create_ui()
         borderchars = borderchars,
     })
 
+    vim.keymap.set("n", "q", function()
+        self:close_ui()
+    end, { noremap = true, silent = true, buffer = buffer_id })
+
+    vim.keymap.set("n", "<esc>", function()
+        self:close_ui()
+    end, { noremap = true, silent = true, buffer = buffer_id })
+
+    vim.api.nvim_create_autocmd("ExitPre", {
+        buffer = buffer_id, -- Target the current buffer
+        once = true,
+        callback = function(ev)
+            self:close_ui()
+        end
+    })
+
     return buffer_id, window_id
 end
 
 function Ui:close_ui()
-    if self.window_id ~= nil then
-        vim.api.nvim_win_close(self.window_id, true)
-        self.window_id = nil
-    end
     if self.buffer_id ~= nil then
-        vim.api.nvim_buf_delete(self.buffer_id, { force = true })
-        self.buffer_id = nil
+        if vim.api.nvim_buf_is_valid(self.buffer_id) then
+            vim.api.nvim_buf_delete(self.buffer_id, { force = true })
+        end
     end
+    if self.window_id ~= nil then
+        if vim.api.nvim_win_is_valid(self.window_id) then
+            vim.api.nvim_win_close(self.window_id, true)
+        end
+    end
+    self.buffer_id = nil
+    self.window_id = nil
     self.is_window_open = false
 end
 

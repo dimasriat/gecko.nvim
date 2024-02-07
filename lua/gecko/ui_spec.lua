@@ -29,7 +29,7 @@ describe("Ui", function()
             eq(gecko.ui:get_is_window_open(), false)
         end)
 
-        it("should close when key pressed `q`", function ()
+        it("should close when key pressed `q`", function()
             gecko.ui:toggle_ui()
 
             local window_id = gecko.ui:get_window_id()
@@ -47,7 +47,7 @@ describe("Ui", function()
             eq(gecko.ui:get_is_window_open(), false)
         end)
 
-        it("should close when key pressed `esc`", function ()
+        it("should close when key pressed `esc`", function()
             gecko.ui:toggle_ui()
 
             local window_id = gecko.ui:get_window_id()
@@ -65,7 +65,7 @@ describe("Ui", function()
             eq(gecko.ui:get_is_window_open(), false)
         end)
 
-        it("should close when type :q", function ()
+        it("should close when type :q", function()
             gecko.ui:toggle_ui()
 
             local window_id = gecko.ui:get_window_id()
@@ -76,7 +76,7 @@ describe("Ui", function()
             eq(gecko.ui:get_is_window_open(), true)
 
             -- type :q
-            vim.api.nvim_input(":q<cr>")
+            vim.cmd("q")
 
             eq(vim.api.nvim_win_is_valid(window_id), false)
             eq(vim.api.nvim_buf_is_valid(buffer_id), false)
