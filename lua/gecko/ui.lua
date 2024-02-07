@@ -28,6 +28,9 @@ function Ui:toggle_ui(lines)
         -- set buffer content
         vim.api.nvim_buf_set_lines(buffer_id, 0, #lines, false, lines)
 
+        -- set buffer to readonly
+        vim.api.nvim_buf_set_option(buffer_id, "modifiable", false)
+
         return
     end
     self:close_ui()
