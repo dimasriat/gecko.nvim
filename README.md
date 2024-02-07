@@ -37,13 +37,21 @@ You can install `gecko.nvim` using your favorite package manager.
 ### With [Vim-Plug](https://github.com/junegunn/vim-plug)
 
 ```vim
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'dimasriat/gecko.nvim'
 ```
 
 ### With [Packer](https://github.com/wbthomason/packer.nvim)
 
 ```lua
-use {'dimasriat/gecko.nvim'}
+use {
+    'dimasriat/gecko.nvim',
+    requires = {
+        { 'nvim-lua/plenary.nvim' },
+        { 'nvim-telescope/telescope.nvim' },
+    }
+}
 ```
 
 ## Usage
