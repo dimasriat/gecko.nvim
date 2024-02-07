@@ -13,7 +13,8 @@ function Ui:new()
     return ui
 end
 
-function Ui:toggle_ui()
+function Ui:toggle_ui(lines)
+    lines = lines or {}
     if self.window_id == nil and self.buffer_id == nil then
         local buffer_id, window_id = self:create_ui()
 
@@ -25,13 +26,8 @@ function Ui:toggle_ui()
         vim.api.nvim_win_set_buf(self.window_id, self.buffer_id)
 
         -- set buffer content
-        local lines = {
-            "Hello, World!",
-            "This is a test",
-        }
         vim.api.nvim_buf_set_lines(buffer_id, 0, #lines, false, lines)
 
-        -- set buffer special keymaps
         vim.keymap.set("n", "q", function()
             self:close_ui()
         end, { noremap = true, silent = true, buffer = buffer_id })
