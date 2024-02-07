@@ -1,13 +1,11 @@
 local Ui = require('gecko.ui')
 local Api = require('gecko.api')
 local CoinPicker = require('gecko.coin_picker')
-local telescope = require('telescope')
 
 local Gecko = {}
 Gecko.__index = Gecko
 
 function Gecko:new()
-    telescope.load_extension('gecko')
     local ui = Ui:new()
     local api = Api:new()
     local picker = CoinPicker:new(api, ui)
@@ -20,10 +18,6 @@ function Gecko:new()
 end
 
 function Gecko:find_coin()
-    -- vim.cmd([[:Telescope gecko find_coin]])
-
-    -- find a way to pass the finder result to this
-    -- self.ui:toggle_ui({ "Hello, world!", "Goodbye, world!" })
     self.picker:find_coin()
 end
 

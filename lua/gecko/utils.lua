@@ -20,8 +20,7 @@ function M.fetch_url(req_url)
     }
     if response.status == 429 then
         print("Got rate limitted. Please try again a minute later.")
-    end
-    if response.status ~= 200 then
+    elseif response.status ~= 200 then
         error("Could not make request")
     end
     return response.body
