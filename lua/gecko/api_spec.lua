@@ -1,3 +1,0 @@
--- handle rate limit
--- https://support.coingecko.com/hc/en-us/articles/4538771776153-What-is-the-rate-limit-for-CoinGecko-API-public-plan
--- 5 to 15 calls per minute

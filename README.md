@@ -1,6 +1,6 @@
 # gecko.nvim 🦎
 
-![gecko](gecko.png)
+![gecko](gecko-nvim.gif)
 
 <div align="center">
     
@@ -37,26 +37,46 @@ You can install `gecko.nvim` using your favorite package manager.
 ### With [Vim-Plug](https://github.com/junegunn/vim-plug)
 
 ```vim
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'dimasriat/gecko.nvim'
 ```
 
 ### With [Packer](https://github.com/wbthomason/packer.nvim)
 
 ```lua
-use {'dimasriat/gecko.nvim'}
+use {
+    'dimasriat/gecko.nvim',
+    requires = {
+        { 'nvim-lua/plenary.nvim' },
+        { 'nvim-telescope/telescope.nvim' },
+    }
+}
 ```
 
 ## Usage
 
-1. Open Neovim.
-2. To use `gecko.nvim`, you can set up a keymap in your Neovim configuration. For example:
+To start exploring cryptocurrency data directly within Neovim, you first need
+to set up a keybinding for the `gecko:find_coin()`  function. This will allow
+you to invoke the Gecko plugin and search for coin details with ease.
 
-    ```lua
-    local gecko = require("gecko")
-    vim.keymap.set('n', '<leader>zg', gecko.find_coin, {})
-    ```
+Here is a basic example of how to configure a keybinding:
+```lua
+local gecko = require("gecko")
 
-3. Press `<leader>zg` in normal mode to invoke the plugin and start searching for cryptocurrencies.
+-- Set up a keybinding to invoke the Gecko plugin
+-- This binds the function to <leader>zg in normal mode
+vim.keymap.set('n', '<leader>zg', function()
+    gecko:find_coin()
+end, {desc = "Invoke Gecko to find coin details"})
+```
+In this configuration, pressing `<leader>zg` in normal mode will activate the
+`gecko:find_coin()` function, allowing you to search and display cryptocurrency
+information right within your Neovim editor.
+
+Ensure you replace `<leader>zg` with your preferred keybinding if necessary. The
+`<leader>` key is a placeholder that can be defined in Neovim to be any key you
+choose, making your custom shortcuts comfortable and intuitive to use.
 
 ## Contributing
 
