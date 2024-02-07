@@ -2,15 +2,29 @@ local telescope = require('telescope')
 
 telescope.load_extension('gecko')
 
-local M = {}
+local Gecko = {}
+Gecko.__index = Gecko
 
-function M.find_coin()
+function Gecko:new()
+    local gecko = setmetatable({
+    }, self)
+
+    return gecko
+end
+
+function Gecko:find_coin()
     vim.cmd([[:Telescope gecko find_coin]])
 end
 
-function M.reload()
+function Gecko:reload()
     require('plenary.reload').reload_module('gecko', true)
     print("Gecko Reloaded! wen lambo?")
 end
 
-return M
+function Gecko:toggle_ui()
+    print("ui should be toggled")
+end
+
+local the_gecko = Gecko:new()
+
+return the_gecko
