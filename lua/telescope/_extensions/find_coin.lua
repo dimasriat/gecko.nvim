@@ -67,7 +67,6 @@ local function generate_finder_action(coin_display)
     end
 
     rb:add_heading("RESOURCES")
-    rb:add_content("CoinGecko", { "https://www.coingecko.com/en/coins/" .. coin_detail['web_slug'] })
     rb:add_content("Homepage", coin_detail['links']['homepage'])
     rb:add_content("Blockchain Site", coin_detail['links']['blockchain_site'])
     rb:add_content("Official Forum", coin_detail['links']['official_forum_url'])
