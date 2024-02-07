@@ -1,6 +1,8 @@
+local Ui = require('gecko.ui')
 local telescope = require('telescope')
-
 telescope.load_extension('gecko')
+
+local ui = Ui.new()
 
 local Gecko = {}
 Gecko.__index = Gecko
@@ -22,6 +24,7 @@ function Gecko:reload()
 end
 
 function Gecko:toggle_ui()
+    ui:toggle_ui()
     print("ui should be toggled")
 end
 

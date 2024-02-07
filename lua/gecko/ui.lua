@@ -1,13 +1,12 @@
 local Ui = {}
 Ui.__index = Ui
 
-function Ui:new()
-    local ui = setmetatable({
-        window_id = nil,
-        buffer_id = nil,
-        is_window_open = false,
-    }, self)
-    return ui
+function Ui.new()
+    local instance = setmetatable({}, Ui)
+    instance.window_id = nil
+    instance.buffer_id = nil
+    instance.is_window_open = false
+    return instance
 end
 
 function Ui:toggle_ui()
@@ -30,6 +29,13 @@ function Ui:toggle_ui()
         --     noremap = true,
         --     silent = true,
         -- })
+        return
+    end
+    self:close_ui()
+end
+
+function Ui:close_ui()
+    if self.window_id == nil and self.buffer_id == nil then
         return
     end
     vim.api.nvim_win_close(self.window_id, true)
