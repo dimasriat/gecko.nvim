@@ -18,6 +18,31 @@ function ResultBuilder.new()
     return instance
 end
 
+function ResultBuilder:generate_result_header(web_slug, last_updated)
+    local header_text = [[
+ _______  _______  _______  ___   _  _______        __    _  __   __  ___   __   __ 
+|       ||       ||       ||   | | ||       |      |  |  | ||  | |  ||   | |  |_|  |
+|    ___||    ___||       ||   |_| ||   _   |      |   |_| ||  |_|  ||   | |       |
+|   | __ |   |___ |       ||      _||  | |  |      |       ||       ||   | |       |
+|   ||  ||    ___||      _||     |_ |  |_|  | ___  |  _    ||       ||   | |       |
+|   |_| ||   |___ |     |_ |    _  ||       ||   | | | |   | |     | |   | | ||_|| |
+|_______||_______||_______||___| |_||_______||___| |_|  |__|  |___|  |___| |_|   |_|
+    ]]
+
+    -- push the header text to the buffer lines (trim first, then split by newline)
+    -- split '\n' to a new line
+    for line in string.gmatch(header_text:match("^%s*(.-)%s*$"), "[^\r\n]+") do
+        self:push_buffer_line(line)
+    end
+
+    self:push_buffer_line("")
+    self:push_buffer_line("Source: " .. "https://www.coingecko.com/en/coins/" .. web_slug)
+    self:push_buffer_line("")
+
+    self:push_buffer_line("Last updated: " .. last_updated)
+    self:push_buffer_line("")
+end
+
 function ResultBuilder:get_buffer_lines()
     return self.buffer_lines
 end
@@ -80,7 +105,7 @@ end
 
 function ResultBuilder:output_window()
     local lines = self.buffer_lines
-    vim.cmd('vsplit')
+    vim.cmd('split')
     local win = vim.api.nvim_get_current_win()
     local buf = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_win_set_buf(win, buf)
