@@ -22,6 +22,11 @@ function Ui:toggle_ui()
         self.is_window_open = true
 
         vim.api.nvim_win_set_buf(self.window_id, self.buffer_id)
+        local lines = {
+            "Hello, World!",
+            "This is a test",
+        }
+        vim.api.nvim_buf_set_lines(buffer_id, 0, #lines, false, lines)
         return
     end
     self:close_ui()
