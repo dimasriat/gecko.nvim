@@ -1,29 +1,41 @@
 local Ui = require("gecko.ui")
 
+local eq = assert.are.same
+
 describe("Ui", function ()
     describe("toggle_ui", function ()
-        it("should toggle the window", function ()
+        it("should toggle the window and buffer", function ()
             local ui = Ui.new()
+            ui:toggle_ui()
+
+            local window_id = ui:get_window_id()
+            local buffer_id = ui:get_buffer_id()
+
+            eq(vim.api.nvim_win_is_valid(window_id), true)
+            eq(vim.api.nvim_buf_is_valid(buffer_id), true)
+            eq(ui:get_is_window_open(), true)
 
             ui:toggle_ui()
-            local actual_status_1 = ui:get_window_id()
-            assert.same(vim.api.get_current_win(), actual_status_1)
-            assert.same(vim.api.nvim_win_is_valid(actual_status_1), true)
-
-            ui:toggle_ui()
-            local actual_status_2 = ui:get_window_id()
-            assert.same(vim.api.nvim_win_is_valid(actual_status_2), false)
-
+            eq(vim.api.nvim_win_is_valid(window_id), false)
+            eq(vim.api.nvim_buf_is_valid(buffer_id), false)
+            eq(ui:get_is_window_open(), false)
         end)
-
-        it("should toggle the buffer", function ()
-            -- arrange
-
-            -- act
+    
+        it("should close when key pressed `q`", function ()
+            local ui = Ui.new()
             ui:toggle_ui()
-            local actual = ui:get_buffer_id()
 
-            -- assert
+            local window_id = ui:get_window_id()
+            local buffer_id = ui:get_buffer_id()
+
+            eq(vim.api.nvim_win_is_valid(window_id), true)
+            eq(vim.api.nvim_buf_is_valid(buffer_id), true)
+            eq(ui:get_is_window_open(), true)
+
+            vim.api.nvim_feedkeys("q", "n", true)
+            eq(vim.api.nvim_win_is_valid(window_id), false)
+            eq(vim.api.nvim_buf_is_valid(buffer_id), false)
+            eq(ui:get_is_window_open(), false)
         end)
     end)
 end)

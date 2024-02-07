@@ -1,10 +1,11 @@
 local telescope = require('telescope')
-local gecko = telescope.load_extension('gecko')
+
+telescope.load_extension('gecko')
 
 local M = {}
 
 function M.find_coin()
-    gecko.find_coin()
+    vim.cmd([[:Telescope gecko find_coin]])
 end
 
 function M.reload()

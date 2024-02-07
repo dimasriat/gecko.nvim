@@ -20,22 +20,6 @@ local function generate_new_finder()
     return finders.new_table({ results = lines })
 end
 
-local function generate_result_header(web_slug, last_updated)
-    local coin_list = api.get_coin_list()
-
-    local header_text = [[
- _______  _______  _______  ___   _  _______        __    _  __   __  ___   __   __ 
-|       ||       ||       ||   | | ||       |      |  |  | ||  | |  ||   | |  |_|  |
-|    ___||    ___||       ||   |_| ||   _   |      |   |_| ||  |_|  ||   | |       |
-|   | __ |   |___ |       ||      _||  | |  |      |       ||       ||   | |       |
-|   ||  ||    ___||      _||     |_ |  |_|  | ___  |  _    ||       ||   | |       |
-|   |_| ||   |___ |     |_ |    _  ||       ||   | | | |   | |     | |   | | ||_|| |
-|_______||_______||_______||___| |_||_______||___| |_|  |__|  |___|  |___| |_|   |_|
-    ]]
-
-    rb:push_buffer_line("Last updated: " .. coin_detail['last_updated'])
-end
-
 local function generate_finder_action(coin_display)
     local coin_id = string.match(coin_display, "(.-) :")
     local coin_detail = api.get_coin_detail(coin_id)
