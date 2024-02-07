@@ -37,8 +37,8 @@ function Ui:toggle_ui(lines)
 end
 
 function Ui:create_ui()
-    local width = 160
-    local height = 40
+    local width = vim.api.nvim_win_get_width(0) - 10;
+    local height = vim.api.nvim_win_get_height(0) - 10;
     local borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
 
     local buffer_id = vim.api.nvim_create_buf(false, true)
