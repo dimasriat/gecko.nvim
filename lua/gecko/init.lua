@@ -2,15 +2,16 @@ local Ui = require('gecko.ui')
 local telescope = require('telescope')
 telescope.load_extension('gecko')
 
-local ui = Ui.new()
+local ui = Ui:new()
 
 local Gecko = {}
 Gecko.__index = Gecko
 
 function Gecko:new()
-    local gecko = setmetatable({
-    }, self)
-
+    local obj = {
+        ui = Ui:new(),
+    }
+    local gecko = setmetatable(obj, self)
     return gecko
 end
 

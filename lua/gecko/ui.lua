@@ -1,12 +1,14 @@
 local Ui = {}
 Ui.__index = Ui
 
-function Ui.new()
-    local instance = setmetatable({}, Ui)
-    instance.window_id = nil
-    instance.buffer_id = nil
-    instance.is_window_open = false
-    return instance
+function Ui:new()
+    local obj = {
+        window_id = nil,
+        buffer_id = nil,
+        is_window_open = false,
+    }
+    local ui = setmetatable(obj, self)
+    return ui
 end
 
 function Ui:toggle_ui()
@@ -25,10 +27,6 @@ function Ui:toggle_ui()
         self.is_window_open = true
 
         -- add keymap to close the window
-        -- vim.api.nvim_buf_set_keymap(self.buffer_id, "n", "q", self:toggle_ui(), {
-        --     noremap = true,
-        --     silent = true,
-        -- })
         return
     end
     self:close_ui()
