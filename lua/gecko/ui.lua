@@ -25,10 +25,10 @@ function Ui:toggle_ui()
         self.is_window_open = true
 
         -- add keymap to close the window
-        vim.api.nvim_buf_set_keymap(self.buffer_id, "n", "q", self:toggle_ui(), {
-            noremap = true,
-            silent = true,
-        })
+        -- vim.api.nvim_buf_set_keymap(self.buffer_id, "n", "q", self:toggle_ui(), {
+        --     noremap = true,
+        --     silent = true,
+        -- })
         return
     end
     vim.api.nvim_win_close(self.window_id, true)
